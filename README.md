@@ -1,5 +1,4 @@
-Hehehe fih... i love fih.
 
 <p align="center">
-  <img src="koi/koi.gif" width="256" alt="My koi" />
+  <img src="sakura/sakura.gif" width="256" alt="Daily pixel-art Sakura branch under the moonlight" />
 </p>

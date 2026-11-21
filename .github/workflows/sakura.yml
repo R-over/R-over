@@ -1,0 +1,50 @@
+name: "✿ Sakura Journal"
+
+on:
+  schedule:
+    # Every night just after midnight UTC
+    - cron: "20 0 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/sakura.yml"
+      - "scripts/generate_sakura.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sakura-journal
+  cancel-in-progress: false
+
+jobs:
+  sakura:
+    name: "🌸 Write today's entry"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "✦ Check out the journal"
+        uses: actions/checkout@v4
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: "Install drawing tools"
+        run: python -m pip install --upgrade Pillow
+
+      - name: "Draw today's Sakura"
+        run: python scripts/generate_sakura.py
+
+      - name: "Save the daily entry"
+        shell: bash
+        run: |
+          git add sakura/sakura.gif
+          if git diff --cached --quiet; then
+            echo "Today's Sakura is unchanged; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --quiet --message "✿ sakura: a new journal entry"
+          git push
