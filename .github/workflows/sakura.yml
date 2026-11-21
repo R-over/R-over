@@ -39,12 +39,17 @@ jobs:
       - name: "Save the daily entry"
         shell: bash
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add sakura/sakura.gif
+
           if git diff --cached --quiet; then
             echo "Today's Sakura is unchanged; nothing to commit."
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git commit --quiet --message "✿ sakura: a new journal entry"
-          git push
+
+          git pull --rebase origin main
+          git push origin HEAD:main
